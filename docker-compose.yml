@@ -1,0 +1,31 @@
+version: '3'
+services:
+  app:
+    build: .
+    image: lily
+    command: make run
+    volumes:
+      - ./application:/lily/application
+      - ./package.json:/lily/package.json
+    environment:
+      NODE_ENV: development
+    ports:
+      - "17883:17883"
+    depends_on:
+      - mongo
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+  mongo:
+    image: mongo:3.4.5
+    volumes:
+      - ~/workspace/data/mongo:/data/db:rw
+    ports:
+      - "27017:27017"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"

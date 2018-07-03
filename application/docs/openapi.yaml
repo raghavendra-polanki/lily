@@ -1,0 +1,393 @@
+swagger: "2.0"
+info:
+  description: Lily APIs
+  version: 1.0.0
+  title: Lily
+tags:
+- name: admin
+  description: APIs for Admin Panel
+- name: app
+  description: APIs for app
+schemes:
+- http
+- https
+paths:
+  /v1/feeds/engine:
+    post:
+      tags:
+        - app
+      summary: Get main feed's videos
+      description: Get main feed's videos
+      operationId: feedsEngine
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User identification and athentication data"
+          required: true
+          schema:
+            $ref: "#/definitions/AppAuthData"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/AppVideo"
+        401:
+          description: UNAUTHENTICATED
+          schema:
+            $ref: "#/definitions/UnAuthenticatedErrorResponse"
+        500:
+          description: INTERNAL
+          schema:
+            $ref: "#/definitions/InternalErrorResponse"
+  /v1/feeds/social:
+    post:
+      tags:
+        - app
+      summary: Get social feed's videos
+      description: Get social feed's videos
+      operationId: feedsSocial
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "User identification and athentication data"
+          required: true
+          schema:
+            $ref: "#/definitions/AppAuthData"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/AppVideo"
+        401:
+          description: UNAUTHENTICATED
+          schema:
+            $ref: "#/definitions/UnAuthenticatedErrorResponse"
+        500:
+          description: INTERNAL
+          schema:
+            $ref: "#/definitions/InternalErrorResponse"
+  /api/category/get:
+    get:
+      tags:
+        - admin
+      summary: Get category data
+      description: Get category data
+      operationId: getCategory
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: Category ID
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                $ref: "#/definitions/Category"
+        400:
+          description: INVALID_ARGUMENT
+          schema:
+            $ref: "#/definitions/InvalidArgumentErrorResponse"
+        404:
+          description: NOT_FOUND
+          schema:
+            $ref: "#/definitions/NotFoundErrorResponse"
+        500:
+          description: INTERNAL
+          schema:
+            $ref: "#/definitions/InternalErrorResponse"
+  /api/category/list:
+    get:
+      tags:
+        - admin
+      summary: Get all categories data
+      description: Get all categories data
+      operationId: listCategories
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                type: array
+                items:
+                  $ref: "#/definitions/Category"
+        500:
+          description: INTERNAL
+          schema:
+            $ref: "#/definitions/InternalErrorResponse"
+  /api/category/insert:
+    post:
+      tags:
+        - admin
+      summary: Insert new category
+      description: Insert new category
+      operationId: insertCategory
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Category Insert Data"
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                $ref: "#/definitions/Names"
+              is_root:
+                type: boolean
+                example: true
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 1707290001
+        400:
+          description: INVALID_ARGUMENT
+          schema:
+            $ref: "#/definitions/InvalidArgumentErrorResponse"
+        409:
+          description: ALREADY_EXISTS
+          schema:
+            $ref: "#/definitions/AlreadyExistsErrorResponse"
+        500:
+          description: INTERNAL
+          schema:
+            $ref: "#/definitions/InternalErrorResponse"
+  /api/category/set_parents:
+    post:
+      tags:
+        - admin
+      summary: Set parents of a category
+      description: Set parents of a category
+      deprecated: true
+      operationId: setParents
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Category Set Parent Data"
+          required: true
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 1707290001
+              parents:
+                type: array
+                items:
+                  type: string
+                example:
+                  - 1707280002
+                  - 1707280003
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: OK
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 1707290001
+        400:
+          description: INVALID_ARGUMENT
+          schema:
+            $ref: "#/definitions/InvalidArgumentErrorResponse"
+        500:
+          description: INTERNAL
+          schema:
+            $ref: "#/definitions/InternalErrorResponse"
+definitions:
+  Category:
+    type: object
+    properties:
+      id:
+        type: string
+        example: 1707290001
+      name:
+        $ref: "#/definitions/Names"
+      is_root:
+        type: boolean
+        example: true
+      children:
+        type: array
+        items:
+          type: string
+        example:
+          - 1707280002
+          - 1707280003
+      created_at:
+        type: integer
+        format: int64
+      updated_at:
+        type: integer
+        format: int64
+  Names:
+    type: object
+    example:
+      english: name in english
+      hindi: name in hindi
+  AppAuthData:
+    type: object
+    properties:
+      user_id:
+        type: string
+        example: "17072100132"
+      id_token:
+        type: string
+        example: fn87921b3jfd8921b34jhvuyf8923
+      lang:
+        type: string
+        example: english
+  AppVideo:
+    type: object
+    properties:
+      id:
+        type: string
+        example: "170805000719"
+      is_active:
+        type: boolean
+        example: true
+      url:
+        type: object
+        properties:
+          src:
+            type: string
+            example: youtube
+          id:
+            type: string
+            example: 12wsed4rf
+          channel_id:
+            type: string
+            example: UCTLC-I9GPgKQqr6CJvnalnA
+          channel_name:
+            type: string
+            example: MTV
+      title:
+        type: string
+        example: Video Title
+      desc:
+        type: string
+        example: Video Description
+      length:
+        type: number
+        example: 345
+      categories:
+        type: array
+        items:
+          type: string
+        example:
+          - technology
+          - science
+      rating:
+        type: string
+        example: ua
+      likes:
+        type: number
+        example: 13452
+  InvalidArgumentErrorResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: INVALID_ARGUMENT
+      error:
+        type: string
+        example: need a valid id.
+  NotFoundErrorResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: NOT_FOUND
+      error:
+        type: string
+        example: id not found
+  AlreadyExistsErrorResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: ALREADY_EXISTS
+      error:
+        type: string
+        example: object already exists.
+  UnAuthenticatedErrorResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: UNAUTHENTICATED
+      error:
+        type: string
+        example: need valid authentication data
+  InternalErrorResponse:
+    type: object
+    properties:
+      status:
+        type: string
+        example: INTERNAL
+      error:
+        type: string
+        example: something went wrong.
