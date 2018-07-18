@@ -29,7 +29,7 @@ module.exports = new Mongoose.Schema({
     ],
   },
   categories: [
-    Number,
+    String,
   ],
   choices: [
     {

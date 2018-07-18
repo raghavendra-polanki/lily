@@ -6,13 +6,33 @@ const Mongoose = require('mongoose');
 
 module.exports = new Mongoose.Schema({
   id: String,
-  name: [
-    {
+  is_active: Boolean,
+  user_type: {
+    type: String,
+    enum: [
+      'admin',
+      'generic'
+    ],
+  },
+  user_source:{
+    type: String,
+    enum: [
+      'mobile',
+      'google',
+      'facebook'
+    ],
+  },
+  source_id: {
+    type: String,
+  },
+  source_token: {
+    type: String,
+  },
+  name:{
       first: String,
       middle: String,
       last: String,
     },
-  ],
   mob_nos: [
     {
       code: Number,
@@ -26,6 +46,11 @@ module.exports = new Mongoose.Schema({
   categories: [
     String, // these are category_ids.
   ],
+  birthday: {
+    day: Number,
+    month: Number,
+    year: Number
+  },
   age_group: {
     type: String,
     enum: [

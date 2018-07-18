@@ -17,7 +17,7 @@ docker run -d -p 27017:27017 --restart unless-stopped -v $HOME/workspace/data/mo
 ### Start application container
 #### On Development
 ```
-docker run --rm -it -v $(pwd)/application:/lily/application -v $(pwd)/package.json:/lily/package.json --link mongo_container:mongo -p 17883:17883 -p 17884:17884 --name=lily_1 lily bash
+docker run --rm -it -v $(pwd)/application:/lily/application -v $(pwd)/package.json:/lily/package.json -p 17883:17883 -p 17884:17884 --name=lily_1 lily bash
 ```
 #### On Production
 ```

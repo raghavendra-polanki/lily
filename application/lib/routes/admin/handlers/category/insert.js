@@ -57,7 +57,11 @@ const processRequest = async (req, res, next) => {
     // save category in database.
     await categoryData.save();
 
-    return categoryID;
+    let returnData = {
+      id: categoryData.id,
+      name: categoryData.name
+    }
+    return returnData;
   } catch (err) {
     $.log.Error(err);
     res.status(500).json({status: 'INTERNAL', error: 'something went wrong'});
